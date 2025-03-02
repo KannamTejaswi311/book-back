@@ -1,3 +1,10 @@
-export const PORT = 5555;
+const mongoose = require('mongoose');
 
-export const mongoDBURL = 'mongodb+srv://lisa:lisa@book-store-mern.2cbjr.mongodb.net/books-collection?retryWrites=true&w=majority&appName=Book-store-MERN';
+const mongoURI = process.env.MONGO_URI;
+
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log("MongoDB Connected"))
+.catch((err) => console.error("MongoDB Connection Error:", err));

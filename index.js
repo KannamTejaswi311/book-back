@@ -1,44 +1,34 @@
-import dotenv from "dotenv";
-dotenv.config();
-
-import express from 'express';
-import { PORT, mongoDBURL } from './config.js';
-import mongoose from 'mongoose';
-import booksRoute from './routes/booksRoute.js';
-import cors from 'cors';
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
 
 const app = express();
+const PORT = process.env.PORT || 5000; // Use Render's assigned port
 
-// Middleware for parsing request body
-app.use(express.json());
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+}));
 
-// Middleware for handling CORS POLICY
-// Option 1: Allow All Origins with Default of cors(*)
-app.use(cors());
-// Option 2: Allow Custom Origins
-// app.use(
-//   cors({
-//     origin: 'http://localhost:3000',
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//     allowedHeaders: ['Content-Type'],
-//   })
-// );
 
-app.get('/', (request, response) => {
-  console.log(request);
-  return response.status(234).send('Welcome To MERN Stack Tutorial');
+
+
+
+
+
+
+
+app.get('/', (req, res) => {
+  res.send('Backend is running');
 });
 
-app.use('/books', booksRoute);
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log("MongoDB Connected"))
+.catch((err) => console.error("MongoDB Connection Error:", err));
 
-mongoose
-  .connect(mongoDBURL)
-  .then(() => {
-    console.log('App connected to database');
-    app.listen(PORT, () => {
-      console.log(`App is listening to port: ${PORT}`);
-    });
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
